@@ -1,0 +1,48 @@
+{
+  "name": "project-management-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "start": "pm2 start ecosystem.config.json --no-daemon --interpreter none",
+    "dev": "cross-env NODE_ENV=development nodemon ./server/index.ts",
+    "lint": "eslint . --ext .js,.ts",
+    "lint:fix": "eslint . --ext .js,.ts --fix",
+    "postinstall": "./node_modules/.bin/pm2 install typescript"
+  },
+  "keywords": [],
+  "author": "Tomás Catena",
+  "license": "MIT",
+  "dependencies": {
+    "colors": "^1.4.0",
+    "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "express-graphql": "^0.12.0",
+    "graphql": "^15.8.0",
+    "mongoose": "^6.3.5",
+    "pm2": "^5.2.0"
+  },
+  "devDependencies": {
+    "@types/colors": "^1.2.1",
+    "@types/cors": "^2.8.12",
+    "@types/express": "^4.17.13",
+    "@types/express-graphql": "^0.9.0",
+    "@types/graphql": "^14.5.0",
+    "@types/mongoose": "^5.11.97",
+    "@typescript-eslint/eslint-plugin": "5.11.0",
+    "@typescript-eslint/parser": "5.11.0",
+    "eslint": "8.8.0",
+    "eslint-config-airbnb-base": "15.0.0",
+    "eslint-config-airbnb-typescript": "16.1.0",
+    "eslint-config-prettier": "8.3.0",
+    "eslint-plugin-import": "2.25.4",
+    "eslint-plugin-jest": "26.1.0",
+    "eslint-plugin-prettier": "4.0.0",
+    "eslint-plugin-security": "1.4.0",
+    "nodemon": "^2.0.16",
+    "ts-node": "^10.8.1",
+    "typescript": "^4.7.3"
+  }
+}
