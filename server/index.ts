@@ -1,11 +1,14 @@
 import express from 'express';
-import { config } from 'dotenv';
+import 'dotenv/config'; // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
 import { graphqlHTTP } from 'express-graphql';
+import 'colors';
 import schema from './schema/schema';
+import { connectDB } from './config/db';
 
 const app = express();
 
-config();
+// Connect to database
+connectDB();
 
 const PORT = process.env.PORT || 5000;
 
