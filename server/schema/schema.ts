@@ -5,6 +5,7 @@ import {
   GraphQLSchema,
   GraphQLString,
   GraphQLNonNull,
+  GraphQLEnumType,
 } from 'graphql';
 import Client from '../models/Client';
 import Project from '../models/Project';
@@ -93,6 +94,46 @@ const mutation = new GraphQLObjectType({
       },
       resolve(parentValue, { id }) {
         return Client.findByIdAndDelete(id);
+      },
+    },
+    // add a project
+    addProject: {
+      type: ProjectType,
+      args: {
+        name: { type: GraphQLNonNull(GraphQLString) },
+        description: { type: GraphQLNonNull(GraphQLString) },
+        status: {
+          type: new GraphQLEnumType({
+            name: 'ProjectStatus',
+            values: {
+              NEW: { value: 'Not Started' },
+              PROGRESS: { value: 'In Progress' },
+              COMPLETED: { value: 'Completed' },
+            },
+          }),
+          defaultValue: 'NEW',
+        },
+        clientId: { type: GraphQLNonNull(GraphQLID) },
+      },
+      resolve(parentValue, { name, description, status, clientId }) {
+        const newProject = new Project({
+          name,
+          description,
+          status,
+          clientId,
+        });
+
+        return newProject.save();
+      },
+    },
+    // delete a project
+    deleteProject: {
+      type: ProjectType,
+      args: {
+        id: { type: GraphQLNonNull(GraphQLID) },
+      },
+      resolve(parentValue, { id }) {
+        return Project.findByIdAndDelete(id);
       },
     },
   },
