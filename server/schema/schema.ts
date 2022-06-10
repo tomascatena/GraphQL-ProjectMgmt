@@ -4,6 +4,7 @@ import {
   GraphQLObjectType,
   GraphQLSchema,
   GraphQLString,
+  GraphQLNonNull,
 } from 'graphql';
 import Client from '../models/Client';
 import Project from '../models/Project';
@@ -66,8 +67,29 @@ const RootQuery = new GraphQLObjectType({
   },
 });
 
+// Mutations
+const mutation = new GraphQLObjectType({
+  name: 'Mutation',
+  fields: {
+    addClient: {
+      type: ClientType,
+      args: {
+        name: { type: GraphQLNonNull(GraphQLString) },
+        email: { type: GraphQLNonNull(GraphQLString) },
+        phone: { type: GraphQLNonNull(GraphQLString) },
+      },
+      resolve: (parentValue, { name, email, phone }) => {
+        const newClient = new Client({ name, email, phone });
+
+        return newClient.save();
+      },
+    },
+  },
+});
+
 const schema = new GraphQLSchema({
   query: RootQuery,
+  mutation,
 });
 
 export default schema;
