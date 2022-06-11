@@ -1,7 +1,8 @@
-import React from 'react';
-import Header from './components/Header/Header';
-import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
+import AddClientModal from './components/AddClientModal/AddClientModal';
 import Clients from './components/Clients/Clients';
+import Header from './components/Header/Header';
+import React from 'react';
 
 const cache = new InMemoryCache({
   typePolicies: {
@@ -16,7 +17,7 @@ const cache = new InMemoryCache({
       },
     },
   },
-})
+});
 
 const client = new ApolloClient({
   uri: 'http://localhost:5000/graphql',
@@ -29,6 +30,8 @@ const App: React.FC = () => {
       <Header />
 
       <div className='container'>
+        <AddClientModal/>
+
         <Clients/>
       </div>
     </ApolloProvider>

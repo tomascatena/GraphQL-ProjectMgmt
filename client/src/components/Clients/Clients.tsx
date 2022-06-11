@@ -1,10 +1,9 @@
-import React from 'react';
-import { useQuery } from '@apollo/client';
-import ClientRow from '../ClientRow/ClientRow';
 import { Client, ClientsData } from '../../typings/typings';
 import { GET_CLIENTS } from '../../queries/clientQueries';
+import { useQuery } from '@apollo/client';
+import ClientRow from '../ClientRow/ClientRow';
+import React from 'react';
 import Spinner from '../Spinner/Spinner';
-
 
 const Clients: React.FC = () => {
   const { loading, error, data } = useQuery<ClientsData, Client>(GET_CLIENTS);
@@ -32,7 +31,10 @@ const Clients: React.FC = () => {
 
           <tbody>
             {data?.clients.map((client) => (
-              <ClientRow key={client.id} client={client} />
+              <ClientRow
+                key={client.id}
+                client={client}
+              />
             ))}
           </tbody>
         </table>
