@@ -4,3 +4,7 @@ export interface Client {
   email: string;
   phone: string;
 }
+
+export interface ClientsData {
+  clients: Client[];
+}
