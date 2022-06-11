@@ -1,16 +1,11 @@
-import React from 'react'
-import {gql, useQuery} from '@apollo/client'
+import React from 'react';
+import { gql, useQuery } from '@apollo/client';
+import ClientRow from '../ClientRow/ClientRow';
+import { Client } from '../../typings/typings';
 
-type Props = {}
+type Props = {};
 
-interface Client {
-  id: number;
-  name: string;
-  email: string;
-  phone: string;
-}
-
-interface ClientsData {
+export interface ClientsData {
   clients: Client[];
 }
 
@@ -23,31 +18,41 @@ const GET_CLIENTS = gql`
       phone
     }
   }
-`
+`;
 
-const Clients:React.FC<Props> = () => {
-const  {loading, error, data} =  useQuery<ClientsData, Client>(GET_CLIENTS)
+const Clients: React.FC<Props> = () => {
+  const { loading, error, data } = useQuery<ClientsData, Client>(GET_CLIENTS);
 
-if(loading){
-  return <p>Loading...</p>
-}
+  if (loading) {
+    return <p>Loading...</p>;
+  }
 
-if(error){
-  return <p>Something went wrong</p>
-}
-
+  if (error) {
+    return <p>Something went wrong</p>;
+  }
 
   return (
     <>
-    {!loading && !error && data?.clients?.map(client => (
-      <div key={client.id}>
-        <h2>{client.name}</h2>
-        <p>{client.email}</p>
-        <p>{client.phone}</p>
-      </div>
-    ))}
-    </>
-  )
-}
+      {!loading && !error && (
+        <table className='table table-hover mt-3'>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th></th>
+            </tr>
+          </thead>
 
-export default Clients
+          <tbody>
+            {data?.clients.map((client) => (
+              <ClientRow key={client.id} client={client} />
+            ))}
+          </tbody>
+        </table>
+      )}
+    </>
+  );
+};
+
+export default Clients;
