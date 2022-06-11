@@ -1,6 +1,10 @@
+import { ADD_CLIENT } from '../../mutations/clientMutations';
+import { ClientsData } from '../../typings/typings';
+import { FaUser } from 'react-icons/fa';
+import { GET_CLIENTS } from '../../queries/clientQueries';
+import { useMutation } from '@apollo/client';
 import React, { useState } from 'react';
 
-import { FaUser } from 'react-icons/fa';
 type Props = {};
 
 const AddClientModal: React.FC<Props> = () => {
@@ -8,9 +12,33 @@ const AddClientModal: React.FC<Props> = () => {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
 
+  const [addClient] = useMutation(ADD_CLIENT, {
+    variables: { name, email, phone },
+    update(cache, { data: { addClient } }) {
+      const clients = cache.readQuery<ClientsData>({ query: GET_CLIENTS })!.clients;
+
+      cache.writeQuery({
+        query: GET_CLIENTS,
+        data: {
+          clients: [...clients, addClient],
+        },
+      });
+    }
+  }
+  );
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log({ name, email, phone });
+
+    if (!name || !email || !phone) {
+      return alert('Please fill in all fields');
+    }
+
+    addClient();
+
+    setName('');
+    setEmail('');
+    setPhone('');
   };
 
   return (
