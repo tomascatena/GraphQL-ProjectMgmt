@@ -1,11 +1,22 @@
 import React from 'react';
+import Header from './components/Header/Header';
+import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
 
-function App() {
+const client = new ApolloClient({
+  uri: 'http://localhost:5000/graphql',
+  cache: new InMemoryCache()
+});
+
+const App: React.FC = () => {
   return (
-    <div className="container">
-      <h1>Hello World</h1>
-    </div>
+    <ApolloProvider client={client}>
+      <Header />
+
+      <div className='container'>
+        <h1>Hello World</h1>
+      </div>
+    </ApolloProvider>
   );
-}
+};
 
 export default App;
