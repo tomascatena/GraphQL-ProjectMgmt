@@ -9,7 +9,7 @@ type Props = {
 const ClientInfo:React.FC<Props> = ({ client }) => {
   return (
     <div>
-      <h5 className="mt-5">Client Information</h5>
+      <h5 className="mt-4">Client Information</h5>
 
       <ul className="list-group">
         <li className="list-group-item">

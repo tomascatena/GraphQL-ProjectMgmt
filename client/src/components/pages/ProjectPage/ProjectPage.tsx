@@ -23,8 +23,6 @@ const ProjectPage:React.FC<Props> = () => {
     return <p>Something went wrong</p>;
   }
 
-  console.log(data);
-
   return (
     <>
       {!loading && !error && data?.project && (

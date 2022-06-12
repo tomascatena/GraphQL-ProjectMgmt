@@ -24,3 +24,5 @@ export interface ProjectsData {
 export interface GetProject {
   project: Project
 }
+
+export type ProjectStatus = 'NEW' | 'PROGRESS' | 'COMPLETED'
