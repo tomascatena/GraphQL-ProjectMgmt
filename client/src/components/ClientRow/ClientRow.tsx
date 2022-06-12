@@ -1,7 +1,8 @@
-import { Client, ClientsData } from '../../typings/typings';
+import { Client } from '../../typings/typings';
 import { DELETE_CLIENT } from '../../mutations/clientMutations';
 import { FaTrash } from 'react-icons/fa';
 import { GET_CLIENTS } from '../../queries/clientQueries';
+import { GET_PROJECTS } from '../../queries/projectQueries';
 import { useMutation } from '@apollo/client';
 import React from 'react';
 
@@ -12,17 +13,17 @@ type Props = {
 const ClientRow: React.FC<Props> = ({ client }) => {
   const [deleteClient] = useMutation(DELETE_CLIENT, {
     variables: { id: client.id },
-    // refetchQueries: [{query: GET_CLIENTS}],
-    update(cache, { data: { deleteClient } }) {
-      const clients = cache.readQuery<ClientsData>({ query: GET_CLIENTS })!.clients;
+    refetchQueries: [{ query: GET_CLIENTS }, { query: GET_PROJECTS }],
+    // update(cache, { data: { deleteClient } }) {
+    //   const clients = cache.readQuery<ClientsData>({ query: GET_CLIENTS })!.clients;
 
-      cache.writeQuery({
-        query: GET_CLIENTS,
-        data: {
-          clients: clients.filter((client) => client.id !== deleteClient.id)
-        },
-      });
-    },
+    //   cache.writeQuery({
+    //     query: GET_CLIENTS,
+    //     data: {
+    //       clients: clients.filter((client) => client.id !== deleteClient.id)
+    //     },
+    //   });
+    // },
   });
 
   return (
