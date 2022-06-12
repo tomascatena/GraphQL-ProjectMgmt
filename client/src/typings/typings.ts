@@ -25,4 +25,8 @@ export interface GetProject {
   project: Project
 }
 
+export interface GetClients {
+  clients: Client[]
+}
+
 export type ProjectStatus = 'NEW' | 'PROGRESS' | 'COMPLETED'

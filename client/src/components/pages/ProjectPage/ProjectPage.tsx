@@ -3,6 +3,7 @@ import { GetProject } from '../../../typings/typings';
 import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import ClientInfo from '../../ClientInfo/ClientInfo';
+import DeleteProjectButton from '../../DeleteProjectButton/DeleteProjectButton';
 import React from 'react';
 import Spinner from '../../Spinner/Spinner';
 
@@ -43,6 +44,8 @@ const ProjectPage:React.FC<Props> = () => {
           <p className="lead">{data.project.status}</p>
 
           {data.project.client && <ClientInfo client={data.project.client}/>}
+
+          {projectId && <DeleteProjectButton projectId={projectId} />}
         </div>
       )}
     </>

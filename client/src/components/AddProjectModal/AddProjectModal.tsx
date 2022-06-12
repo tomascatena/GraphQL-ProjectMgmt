@@ -1,8 +1,9 @@
 import { ADD_PROJECT } from '../../mutations/projectMutations';
 import { FaList } from 'react-icons/fa';
+import { GET_CLIENTS } from '../../queries/clientQueries';
 import { GET_PROJECTS } from '../../queries/projectQueries';
-import { ProjectStatus, ProjectsData } from '../../typings/typings';
-import { useMutation } from '@apollo/client';
+import { GetClients, ProjectStatus, ProjectsData } from '../../typings/typings';
+import { useMutation, useQuery } from '@apollo/client';
 import React, { useState } from 'react';
 
 type Props = {};
@@ -13,8 +14,16 @@ const AddProjectModal: React.FC<Props> = () => {
   const [clientId, setClientId] = useState('');
   const [status, setStatus] = useState<ProjectStatus>('NEW');
 
+  // Get Clients for select
+  const { loading, error, data } = useQuery<GetClients>(GET_CLIENTS);
+
   const [addProject] = useMutation(ADD_PROJECT, {
-    variables: { name, description, clientId, status },
+    variables: {
+      name,
+      description,
+      clientId,
+      status
+    },
     update(cache, { data: { addProject } }) {
       const projects = cache.readQuery<ProjectsData>({ query: GET_PROJECTS })!.projects;
 
@@ -43,124 +52,154 @@ const AddProjectModal: React.FC<Props> = () => {
     setStatus('NEW');
   };
 
+  if (loading) {
+    return null;
+  }
+
+  if (error) {
+    return <p>Something went wrong</p>;
+  }
+
   return (
     <div>
-      <button
-        type='button'
-        className='btn btn-primary'
-        data-bs-toggle='modal'
-        data-bs-target='#addProjectModal'
-      >
-        <div className='d-flex align-items-center'>
-          <FaList className='icon' />
+      {!loading && !error && data && (
+        <>
+          <button
+            type='button'
+            className='btn btn-primary'
+            data-bs-toggle='modal'
+            data-bs-target='#addProjectModal'
+          >
+            <div className='d-flex align-items-center'>
+              <FaList className='icon' />
 
-          <div>New Project</div>
-        </div>
-      </button>
-
-      <div
-        className='modal fade'
-        id='addProjectModal'
-        aria-labelledby='addProjectModalLabel'
-        aria-hidden='true'
-      >
-        <div className='modal-dialog'>
-          <div className='modal-content'>
-            <div className='modal-header'>
-              <h5
-                className='modal-title'
-                id='addProjectModalLabel'
-              >
-                New Project
-              </h5>
-
-              <button
-                type='button'
-                className='btn-close'
-                data-bs-dismiss='modal'
-                aria-label='Close'
-              />
+              <div>New Project</div>
             </div>
+          </button>
 
-            <div className='modal-body'>
-              <form
-                className='mb-3'
-                onSubmit={handleSubmit}
-              >
-                <label
-                  htmlFor='name'
-                  className='form-label mt-2'
-                >
-                  Name
-                </label>
+          <div
+            className='modal fade'
+            id='addProjectModal'
+            aria-labelledby='addProjectModalLabel'
+            aria-hidden='true'
+          >
+            <div className='modal-dialog'>
+              <div className='modal-content'>
+                <div className='modal-header'>
+                  <h5
+                    className='modal-title'
+                    id='addProjectModalLabel'
+                  >
+                    New Project
+                  </h5>
 
-                <input
-                  type='text'
-                  className='form-control'
-                  id='name'
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
+                  <button
+                    type='button'
+                    className='btn-close'
+                    data-bs-dismiss='modal'
+                    aria-label='Close'
+                  />
+                </div>
 
-                <label
-                  htmlFor='description'
-                  className='form-label mt-2'
-                >
-                  Description
-                </label>
+                <div className='modal-body'>
+                  <form
+                    className='mb-3'
+                    onSubmit={handleSubmit}
+                  >
+                    <div className="mb-3">
+                      <label
+                        htmlFor='name'
+                        className='form-label'
+                      >
+                        Name
+                      </label>
 
-                <textarea
-                  className='form-control'
-                  id='description'
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                />
+                      <input
+                        type='text'
+                        className='form-control'
+                        id='name'
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                      />
+                    </div>
 
-                <label
-                  htmlFor='clientId'
-                  className='form-label mt-2'
-                >
-                  Client Id
-                </label>
+                    <div className="mb-3">
+                      <label
+                        htmlFor='description'
+                        className='form-label'
+                      >
+                        Description
+                      </label>
 
-                <input
-                  type='text'
-                  className='form-control'
-                  id='clientId'
-                  value={clientId}
-                  onChange={(e) => setClientId(e.target.value)}
-                />
+                      <textarea
+                        className='form-control'
+                        id='description'
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                      />
+                    </div>
 
-                <label
-                  htmlFor='status'
-                  className='form-label mt-2'
-                >
-                  Status
-                </label>
+                    <div className="mb-3">
+                      <label
+                        htmlFor='status'
+                        className='form-label'
+                      >
+                        Status
+                      </label>
 
-                <select
-                  className='form-select'
-                  id='status'
-                  value={status}
-                  onChange={(e) => setStatus(e.target.value as ProjectStatus)}
-                >
-                  <option value="NEW" >Not Started</option>
-                  <option value="PROGRESS">Progress</option>
-                  <option value="COMPLETED">Completed</option>
-                </select>
+                      <select
+                        className='form-select'
+                        id='status'
+                        value={status}
+                        onChange={(e) => setStatus(e.target.value as ProjectStatus)}
+                      >
+                        <option value="NEW" >Not Started</option>
+                        <option value="PROGRESS">Progress</option>
+                        <option value="COMPLETED">Completed</option>
+                      </select>
+                    </div>
 
-                <button
-                  className='btn btn-primary mt-4'
-                  type='submit'
-                  data-bs-dismiss='modal'
-                >
-                  Submit
-                </button>
-              </form>
+                    <div className="mb-3">
+                      <label
+                        htmlFor='clientId'
+                        className='form-label'
+                      >
+                        Client
+                      </label>
+
+                      <select
+                        className='form-select'
+                        id='clientId'
+                        value={clientId}
+                        onChange={(e) => setClientId(e.target.value)}
+                      >
+                        <option value="">Select Client</option>
+
+                        {data.clients.map(client => (
+                          <option
+                            key={client.id}
+                            value={client.id}
+                          >
+                            {client.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <button
+                      className='btn btn-primary mt-3'
+                      type='submit'
+                      data-bs-dismiss='modal'
+                    >
+                      Submit
+                    </button>
+                  </form>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
+        </>
+      )}
     </div>
   );
 };
