@@ -32,15 +32,13 @@ mutation updateProject(
   $id: ID!, 
   $name: String!, 
   $description: String!, 
-  $status: ProjectStatus!, 
-  $clientId: ID!
+  $status: ProjectStatusUpdate!, 
 ) {
   updateProject(
     id: $id, 
     name: $name, 
     description: $description, 
     status: $status, 
-    clientId: $clientId
   ) {
     id
     name
