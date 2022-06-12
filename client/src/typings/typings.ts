@@ -20,3 +20,7 @@ export interface Project {
 export interface ProjectsData {
   projects: Project[];
 }
+
+export interface GetProject {
+  project: Project
+}
